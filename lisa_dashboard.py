@@ -1,14 +1,13 @@
 import streamlit as st
 from datetime import datetime
-from pytz import timezone
+from zoneinfo import ZoneInfo
 
 import calendar
 
 st.set_page_config(page_title="L.I.S.A. - Live Intelligent Support Agent", layout="wide")
 st.image("AI Lisa.png", use_container_width=True)
 
-eastern = timezone('America/New_York')
-current_time = datetime.now(eastern).strftime("%A, %B %d, %Y — %I:%M %p")
+current_time = datetime.now(ZoneInfo("America/New_York")).strftime("%A, %B %d, %Y — %I:%M %p")
 
 st.markdown(f"<div style='text-align:center;font-size:18px;padding:10px 0;'>🕒 Today is: <b>{current_time}</b></div>", unsafe_allow_html=True)
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
