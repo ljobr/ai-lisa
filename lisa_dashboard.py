@@ -1,7 +1,10 @@
+
 import streamlit as st
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import calendar
+import json
+import os
 
 st.set_page_config(page_title="L.I.S.A. - Live Intelligent Support Agent", layout="wide")
 
@@ -12,9 +15,10 @@ current_time = datetime.now(ZoneInfo("America/New_York")).strftime("%A, %B %d, %
 st.markdown(f"<div style='text-align:center;font-size:18px;padding:10px 0;'>🕒 Today is: <b>{current_time}</b></div>", unsafe_allow_html=True)
 
 # ---- TABS ----
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "📅 Dashboard", "🩺 Health & Wellness", "💳 Credit & Finance",
-    "📚 Study & School", "👑 Ministry & Prayer", "💼 Projects & Business", "🌸 Family & Self-Care"
+    "📚 Study & School", "👑 Ministry & Prayer", "💼 Projects & Business",
+    "🌸 Family & Self-Care", "📆 Calendar & Scheduling"
 ])
 
 # ---- TAB 1: Dashboard ----
@@ -100,3 +104,22 @@ with tab7:
         st.error("🚫 It's Sunday. L.I.S.A. will not allow business tasks today.")
     else:
         st.success("✅ You are clear to schedule business work today.")
+
+# ---- TAB 8: Calendar & Scheduling ----
+with tab8:
+    st.subheader("📆 View Your Calendar")
+    events_file = "lisa_calendar_events.json"
+
+    if os.path.exists(events_file):
+        with open(events_file, "r") as f:
+            try:
+                events = json.load(f)
+                for event in events.get("events", []):
+                    st.markdown(f"**{event.get('date', 'Unknown Date')} — {event.get('title', 'No Title')}**")
+                    st.write(event.get('description', 'No description available.'))
+            except json.JSONDecodeError:
+                st.error("Calendar file found, but could not be read.")
+    else:
+        st.info("No events found. Please upload your calendar JSON file named 'lisa_calendar_events.json' to this directory.")
+
+    st.caption("This calendar will expand with editing features soon!")
